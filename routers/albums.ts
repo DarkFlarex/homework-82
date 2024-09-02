@@ -5,7 +5,36 @@ import {AlbumMutation} from "../types";
 import Album from "../models/Album";
 const albumsRouter = express.Router();
 
+albumsRouter.get('/', async (req, res, next) => {
+    try {
+        const artistId = req.query.artist as string;
+        let query = {};
 
+        if (artistId) {
+            query = { artist: new mongoose.Types.ObjectId(artistId) };
+        }
+
+        const albums = await Album.find(query).populate('artist', 'name information');
+
+        return res.send(albums);
+    } catch (error) {
+        next(error);
+    }
+});
+
+albumsRouter.get('/:id', async (req, res,next) => {
+    try {
+        const album = await Album.findById(req.params.id).populate('artist', 'name information');
+
+        if (album === null) {
+            return res.status(404).send({error: 'Album not found'});
+        }
+
+        return res.send(album)
+    } catch (error){
+        next(error);
+    }
+});
 
 albumsRouter.post('/', imagesUpload.single('image'), async (req, res,next) => {
     try {
