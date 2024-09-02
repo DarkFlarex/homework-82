@@ -10,3 +10,9 @@ export type AlbumMutation = {
     datetime: string;
     image: string | null;
 };
+
+export type TrackMutation = {
+    album:string;
+    nameTrack:string;
+    duration:string;
+};
