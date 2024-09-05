@@ -24,6 +24,14 @@ const UserSchema
     }
 });
 
+UserSchema.methods.checkPassword = function(password) {
+    return bcrypt.compare(password, this.password);
+};
+
+UserSchema.methods.generateToken = function (){
+    this.token = randomUUID();
+};
+
 const User = mongoose.model<UserFields, UserModel>('User', UserSchema);
 
 export default User;
