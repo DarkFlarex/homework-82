@@ -7,14 +7,12 @@ const tracksRouter = express.Router();
 
 tracksRouter.get('/', async (req, res, next) => {
     try {
-        const albumId = req.query.album as string;
-        let query = {};
-
-        if (albumId) {
-            query = { album: new mongoose.Types.ObjectId(albumId) };
+        const filter: Record<string, unknown> = {};
+        if (req.query.album) {
+            filter.album = req.query.album;
         }
 
-        const tracks = await Track.find(query).populate('album', 'nameAlbum');
+        const tracks = await Track.find(filter).populate('album', 'nameAlbum');
 
         return res.send(tracks);
     } catch (error) {
