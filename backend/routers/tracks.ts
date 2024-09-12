@@ -12,7 +12,7 @@ tracksRouter.get('/', async (req, res, next) => {
             filter.album = req.query.album;
         }
 
-        const tracks = await Track.find(filter).sort({ numberTrack: 1 });
+        const tracks = await Track.find(filter).populate('album', 'nameAlbum').sort({ numberTrack: 1 });
 
         return res.send(tracks);
     } catch (error) {
