@@ -9,6 +9,11 @@ const ImageCardMedia = styled(CardMedia)({
     paddingTop: '56.25%',
 });
 
+const StyledLink = styled(Link)({
+    color: 'inherit',
+    textDecoration: 'none',
+});
+
 interface Props {
     _id:string;
     name: string;
@@ -22,11 +27,13 @@ const ArtistsItem:React.FC<Props> = ({_id, name,image}) => {
         cardImage = `${API_URL}/${image}`;
     }
     return (
-        <Grid item sx={{ width: '300px' }} component={Link} to={`/albums/${_id}`}>
-            <Card sx={{ height: '100%' }}>
-                <CardHeader title={name} />
-                <ImageCardMedia image={cardImage} title={name} />
-            </Card>
+        <Grid item sx={{ width: '300px' }}>
+            <StyledLink to={`/albums/${_id}`}>
+                <Card sx={{ height: '100%' }}>
+                    <CardHeader title={name} />
+                    <ImageCardMedia image={cardImage} title={name} />
+                </Card>
+            </StyledLink>
         </Grid>
     );
 };

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectArtists, selectArtistsFetching} from "./artistsSlice";
 import {fetchArtists} from "./artistsThunks";
-import {Alert, CircularProgress, Grid} from "@mui/material";
+import {Alert, CircularProgress, Grid, Typography} from "@mui/material";
 import ArtistsItem from "./components/ArtistsItem";
 
 const Artists = () => {
@@ -28,8 +28,17 @@ const Artists = () => {
         ));
     }
     return (
-        <Grid item container spacing={1}>
-            {content}
+        <Grid container spacing={2}>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Typography variant="h4" component="h1">
+                        Artists
+                    </Typography>
+                </Grid>
+                <Grid item container spacing={2} xs={12}>
+                    {content}
+                </Grid>
+            </Grid>
         </Grid>
     );
 };
