@@ -7,7 +7,7 @@ const tackHistoryRouter = express.Router();
 
 tackHistoryRouter.post('/track_history', async (req, res, next) => {
     const headerValue = req.get('Authorization');
-    console.log(headerValue);
+
     if(!headerValue){
         return res.status(401).send({error: 'Header "Authorization" not found!'});
     }
