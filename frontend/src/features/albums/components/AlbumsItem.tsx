@@ -30,7 +30,6 @@ const AlbumItem: React.FC<Props> = ({ _id, artist, nameAlbum, image, datetime })
     if (image) {
         cardImage = `${API_URL}/${image}`;
     }
-
     return (
         <Grid item sx={{ width: '300px' }}>
             <StyledLink to={`/tracks/${_id}`}>

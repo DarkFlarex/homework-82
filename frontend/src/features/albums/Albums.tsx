@@ -12,6 +12,7 @@ const Albums = () => {
     const albums = useAppSelector(selectAlbums);
     const isFetching = useAppSelector(selectAlbumsFetching);
     const artistName = useAppSelector(selectArtistName);
+
     useEffect(() => {
         dispatch(fetchAlbumsOneArtist(id));
     }, [dispatch,id]);
@@ -32,10 +33,11 @@ const Albums = () => {
             />
         ));
     }
+
     return (
         <Grid container spacing={2}>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid item xs={12} sx={{ textAlign: 'center' }}>
                     <Typography variant="h4" component="h1">
                         {artistName}
                     </Typography>

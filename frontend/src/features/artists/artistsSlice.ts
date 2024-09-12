@@ -2,7 +2,6 @@ import {Artist} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
 import {fetchArtists} from "./artistsThunks";
 
-
 export interface ArtistsState {
     items: Artist[];
     itemsFetching: boolean;
