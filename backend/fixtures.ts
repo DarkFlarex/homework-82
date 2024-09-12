@@ -53,7 +53,7 @@ const run = async () => {
     artist: ladyGaga,
     nameAlbum: 'The Fame Monster',
     datetime: 2009,
-    image: 'fixtures/monster.png'
+    image: 'fixtures/monster.jpg'
   });
 
   await Track.create({
