@@ -12,7 +12,7 @@ tracksRouter.get('/', async (req, res, next) => {
             filter.album = req.query.album;
         }
 
-        const tracks = await Track.find(filter).populate('album', 'nameAlbum');
+        const tracks = await Track.find(filter).sort({ numberTrack: 1 });
 
         return res.send(tracks);
     } catch (error) {
@@ -22,10 +22,14 @@ tracksRouter.get('/', async (req, res, next) => {
 
 tracksRouter.post('/',async (req, res ,next) =>{
     try{
+        const tracks = await Track.find({ album: req.body.album }).sort({ numberTrack: -1 });
+        const numberTrack = tracks.length > 0 ? tracks[0].numberTrack + 1 : 1;
+
         const trackMutation:TrackMutation = {
             album: req.body.album,
             nameTrack: req.body.nameTrack,
             duration: req.body.duration,
+            numberTrack: numberTrack,
         };
 
         const track = new Track(trackMutation);
