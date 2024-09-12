@@ -24,7 +24,6 @@ const Artists = () => {
                 _id={artist._id}
                 name={artist.name}
                 image={artist.image}
-                information={artist.information}
             />
         ));
     }
