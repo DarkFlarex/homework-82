@@ -14,3 +14,12 @@ export interface Album {
     datetime: number;
     image: string | null;
 }
+
+export interface Track {
+    album: {
+        nameAlbum: string;
+    };
+    nameTrack:string;
+    duration:string;
+    numberTrack:number;
+}
