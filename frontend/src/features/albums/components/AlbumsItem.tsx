@@ -1,4 +1,3 @@
-// AlbumItem.tsx
 import React from "react";
 import { Card, CardContent, CardHeader, CardMedia, Grid, styled } from "@mui/material";
 import { API_URL } from "../../../constants";
@@ -8,6 +7,11 @@ import imageNotFound from '/src/assets/images/image-not-found.png';
 const ImageCardMedia = styled(CardMedia)({
     height: 0,
     paddingTop: '56.25%',
+});
+
+const StyledLink = styled(Link)({
+    color: 'inherit',
+    textDecoration: 'none',
 });
 
 interface Props {
@@ -29,14 +33,16 @@ const AlbumItem: React.FC<Props> = ({ _id, artist, nameAlbum, image, datetime })
 
     return (
         <Grid item sx={{ width: '300px' }}>
-            <Card sx={{ height: '100%' }} component={Link} to={`/tracks/${_id}`}>
-                <CardHeader title={artist.name}  />
-                <ImageCardMedia image={cardImage} title={nameAlbum} />
-                <CardContent>
-                    <span>{nameAlbum}</span>
-                    <span>: {datetime}.г</span>
-                </CardContent>
-            </Card>
+            <StyledLink to={`/tracks/${_id}`}>
+                <Card sx={{ height: '100%' }}>
+                    <CardHeader title={artist.name}  />
+                    <ImageCardMedia image={cardImage} title={nameAlbum} />
+                    <CardContent>
+                        <span>{nameAlbum}</span>
+                        <span>: {datetime}.г</span>
+                    </CardContent>
+                </Card>
+            </StyledLink>
         </Grid>
     );
 };

@@ -5,10 +5,12 @@ import {fetchAlbumsOneArtist} from "./albumsThunks";
 export interface AlbumsState {
     items: Album[];
     itemsFetching: boolean;
+    artistName: string | null;
 }
 
 const initialState: AlbumsState = {
     items: [],
+    artistName: null,
     itemsFetching: false,
 };
 
@@ -24,6 +26,7 @@ export const albumsSlice = createSlice({
             .addCase(fetchAlbumsOneArtist.fulfilled,(state,{payload:albums})=>{
                 state.itemsFetching = false;
                 state.items = albums;
+                state.artistName = albums[0].artist.name;
             })
             .addCase(fetchAlbumsOneArtist.rejected, (state) => {
                 state.itemsFetching = false;
@@ -32,12 +35,15 @@ export const albumsSlice = createSlice({
     selectors:{
         selectAlbums:(state) => state.items,
         selectAlbumsFetching:(state) =>state.itemsFetching,
+        selectArtistName:(state) => state.artistName,
+
     }
 });
 
-export const AlbumsReducer = albumsSlice.reducer;
+export const albumsReducer = albumsSlice.reducer;
 
 export const {
     selectAlbums,
     selectAlbumsFetching,
+    selectArtistName,
 } = albumsSlice.selectors;

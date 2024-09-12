@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
-import {selectAlbums, selectAlbumsFetching} from "./albumsSlice";
+import {selectAlbums, selectAlbumsFetching, selectArtistName} from "./albumsSlice";
 import {fetchAlbumsOneArtist} from "./albumsThunks";
-import {Alert, CircularProgress, Grid} from "@mui/material";
+import {Alert, CircularProgress, Grid, Typography} from "@mui/material";
 import AlbumsItem from "./components/AlbumsItem";
 
 const Albums = () => {
@@ -11,7 +11,7 @@ const Albums = () => {
     const dispatch = useAppDispatch();
     const albums = useAppSelector(selectAlbums);
     const isFetching = useAppSelector(selectAlbumsFetching);
-
+    const artistName = useAppSelector(selectArtistName);
     useEffect(() => {
         dispatch(fetchAlbumsOneArtist(id));
     }, [dispatch,id]);
@@ -33,8 +33,17 @@ const Albums = () => {
         ));
     }
     return (
-        <Grid item container spacing={1}>
-            {content}
+        <Grid container spacing={2}>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <Typography variant="h4" component="h1">
+                        {artistName}
+                    </Typography>
+                </Grid>
+                <Grid item container spacing={2} xs={12}>
+                    {content}
+                </Grid>
+            </Grid>
         </Grid>
     );
 };
