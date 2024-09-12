@@ -9,7 +9,7 @@ export type ArtistMutation = {
 export type AlbumMutation = {
     artist: string;
     nameAlbum: string;
-    datetime: string;
+    datetime: number;
     image: string | null;
 };
 
@@ -17,6 +17,7 @@ export type TrackMutation = {
     album:string;
     nameTrack:string;
     duration:string;
+    numberTrack:number;
 };
 
 export interface UserFields {
