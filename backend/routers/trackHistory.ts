@@ -5,6 +5,23 @@ import express from "express";
 
 const trackHistoryRouter = express.Router();
 
+trackHistoryRouter.get('/', async (req, res, next) => {
+    try {
+        const filter: Record<string, unknown> = {};
+        if (req.query.track) {
+            filter.track = req.query.track;
+        }
+
+        const albums = await TrackHistory.find(filter)
+            .populate({path: 'trackListened', populate: {path: 'artist', select: 'name'}
+            }).sort({ datetime: -1 });
+
+        return res.send(albums);
+    } catch (error) {
+        next(error);
+    }
+});
+
 trackHistoryRouter.post('/', async (req, res, next) => {
     const headerValue = req.get('Authorization');
 
