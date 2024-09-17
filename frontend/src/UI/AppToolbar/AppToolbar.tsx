@@ -1,5 +1,5 @@
-import {AppBar, Container, Grid, styled, Toolbar, Typography} from '@mui/material';
-import {Link} from 'react-router-dom';
+import {AppBar, Button, Container, Grid, styled, Toolbar, Typography} from '@mui/material';
+import {Link, NavLink} from 'react-router-dom';
 import {selectUser} from "../../features/users/usersSlice";
 import {useAppSelector} from "../../app/hooks";
 import AnonymousMenu from "./AnonymousMenu";
@@ -32,6 +32,9 @@ const AppToolbar = () => {
                 <Grid container alignItems="center" spacing={2}>
                   {user ? <UserMenu user={user} /> : <AnonymousMenu />}
                   <Grid item>
+                    <Button component={NavLink} to={user ? "/track_history" : "/login"} color="inherit">
+                      Track History
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
