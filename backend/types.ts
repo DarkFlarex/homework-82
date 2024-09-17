@@ -15,6 +15,7 @@ export type AlbumMutation = {
 
 export type TrackMutation = {
     album:string;
+    artist:string;
     nameTrack:string;
     duration:string;
     numberTrack:number;
