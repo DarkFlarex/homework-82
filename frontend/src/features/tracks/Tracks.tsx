@@ -13,7 +13,7 @@ const Tracks = () => {
     const tracks = useAppSelector(selectTracks);
     const isFetching = useAppSelector(selectTracksFetching);
     const artistName = useAppSelector(selectArtistName);
-    const albumName = useAppSelector(selectAlbumName)
+    const albumName = useAppSelector(selectAlbumName);
 
     useEffect(() => {
         dispatch(fetchTracksOneAlbum(id));
@@ -30,6 +30,7 @@ const Tracks = () => {
                 nameTrack={track.nameTrack}
                 numberTrack={track.numberTrack}
                 duration={track.duration}
+                trackId={track._id}
             />
         ));
     }
