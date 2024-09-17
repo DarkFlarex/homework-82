@@ -4,7 +4,6 @@ import axiosApi from "../../axiosApi";
 import {isAxiosError} from "axios";
 import {RootState} from "../../app/store";
 
-
 export const register = createAsyncThunk<User, RegisterMutation, { rejectValue: ValidationError }>(
     'users/register',
     async (registerMutation, { rejectWithValue }) => {
