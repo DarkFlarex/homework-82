@@ -3,9 +3,9 @@ import Track from "../models/Track";
 import TrackHistory from "../models/TrackHistory";
 import express from "express";
 
-const tackHistoryRouter = express.Router();
+const trackHistoryRouter = express.Router();
 
-tackHistoryRouter.post('/track_history', async (req, res, next) => {
+trackHistoryRouter.post('/', async (req, res, next) => {
     const headerValue = req.get('Authorization');
 
     if(!headerValue){
@@ -30,15 +30,20 @@ tackHistoryRouter.post('/track_history', async (req, res, next) => {
         return res.status(400).send({ error: 'Track ID not found!' });
     }
 
-    const track = await Track.findById(trackId);
+    const track = await Track.findById(trackId).populate('artist');
 
     if (!track) {
         return res.status(400).send({ error: 'Track not found!' });
     }
 
+    if (!track.artist) {
+        return res.status(400).send({ error: 'Artist not found!' });
+    }
+
     try {
         const trackHistory = new TrackHistory({
             userListened: user._id,
+            artist: track.artist._id,
             trackListened: track._id,
             datetime: new Date(),
         });
@@ -50,4 +55,4 @@ tackHistoryRouter.post('/track_history', async (req, res, next) => {
     }
 });
 
-export default tackHistoryRouter;
+export default trackHistoryRouter;
