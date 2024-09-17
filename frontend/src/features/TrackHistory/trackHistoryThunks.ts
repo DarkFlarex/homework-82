@@ -4,6 +4,21 @@ import { RootState } from "../../app/store";
 import { GlobalError, TrackHistory, TrackHistoryMutation } from "../../types";
 import { isAxiosError } from "axios";
 
+export const fetchTrackHistories = createAsyncThunk<TrackHistory[], void, { rejectValue: GlobalError }>(
+    'track_history/fetchAll',
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data: trackHistories } = await axiosApi.get<TrackHistory[]>('/track_history');
+            return trackHistories;
+        } catch (e) {
+            if (isAxiosError(e) && e.response) {
+                return rejectWithValue(e.response.data);
+            }
+            throw e;
+        }
+    }
+);
+
 export const addTrackToHistory = createAsyncThunk<TrackHistory, TrackHistoryMutation, { rejectValue: GlobalError, state: RootState }>(
     'track_history/addTrackToHistory',
     async (trackHistoryMutation, { getState, rejectWithValue }) => {
