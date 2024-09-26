@@ -57,6 +57,4 @@ export const TrackHistoriesReducer = trackHistorySlice.reducer;
 export const {
     selectTrackHistories,
     selectTrackHistoriesFetching,
-    selectAddTrackHistoriesLoading,
-    selectAddTrackHistoriesError,
 }=trackHistorySlice.selectors;

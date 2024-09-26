@@ -62,8 +62,6 @@ export const usersReducer = usersSlice.reducer;
 
 export const {
     selectUser,
-    selectRegisterLoading,
     selectRegisterError,
-    selectLoginLoading,
     selectLoginError,
 } = usersSlice.selectors;

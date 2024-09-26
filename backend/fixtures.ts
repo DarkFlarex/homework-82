@@ -3,6 +3,7 @@ import config from './config';
 import Artist from './models/Artist';
 import Album from './models/Album';
 import Track from './models/Track';
+import User from "./models/User";
 
 const run = async () => {
   await mongoose.connect(config.database);
@@ -12,9 +13,19 @@ const run = async () => {
     await db.dropCollection('artists');
     await db.dropCollection('albums');
     await db.dropCollection('tracks');
+    await db.dropCollection('users');
   } catch (e) {
     console.log('Skipping drop...');
   }
+
+  const user = new User({
+    username: 'user',
+    password: '123',
+  });
+  user.generateToken();
+
+  await user.save();
+
 
   const [
       kurtCobain,
@@ -34,7 +45,7 @@ const run = async () => {
 
 
   const [
-      nirvanaNevermind,
+    nirvanaNevermind,
     InUtero,
     judas,
     TheFameMonster
