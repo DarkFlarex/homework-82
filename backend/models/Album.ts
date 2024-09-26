@@ -1,5 +1,6 @@
 import mongoose, {Types} from "mongoose";
 import Artist from "./Artist";
+import User from "./User";
 
 const Schema = mongoose.Schema;
 
@@ -14,6 +15,18 @@ const AlbumSchema = new Schema ({
                 return Boolean(artist);
             },
             message: 'Artist does not exist',
+        }
+    },
+    createUser:{
+        type:Schema.Types.ObjectId,
+        ref: 'User',
+        required:true,
+        validate:{
+            validator: async (value: Types.ObjectId) =>{
+                const createUser = await User.findById(value);
+                return Boolean(createUser);
+            },
+            message: 'createUser does not exist',
         }
     },
     nameAlbum:{
