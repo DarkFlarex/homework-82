@@ -4,11 +4,17 @@ import { RootState } from "../../app/store";
 import { GlobalError, TrackHistory, TrackHistoryMutation } from "../../types";
 import { isAxiosError } from "axios";
 
-export const fetchTrackHistories = createAsyncThunk<TrackHistory[], void, { rejectValue: GlobalError }>(
+export const fetchTrackHistories = createAsyncThunk<TrackHistory[], void, { rejectValue: GlobalError, state: RootState }>(
     'track_history/fetchAll',
-    async (_, { rejectWithValue }) => {
+    async (_, {getState, rejectWithValue }) => {
+        const token = getState().users.user?.token;
+        if (!token) {
+            return rejectWithValue({ error: 'User token is missing' });
+        }
         try {
-            const { data: trackHistories } = await axiosApi.get<TrackHistory[]>('/track_history');
+            const { data: trackHistories } = await axiosApi.get<TrackHistory[]>('/track_history',{
+                headers: { 'Authorization': `Bearer ${token}`}
+            });
             return trackHistories;
         } catch (e) {
             if (isAxiosError(e) && e.response) {
