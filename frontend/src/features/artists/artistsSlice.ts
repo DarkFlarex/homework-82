@@ -1,15 +1,19 @@
-import {Artist} from "../../types";
+import {Artist, GlobalError} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
-import {fetchArtists} from "./artistsThunks";
+import {createArtist, fetchArtists} from "./artistsThunks";
 
 export interface ArtistsState {
     items: Artist[];
     itemsFetching: boolean;
+    isCreating: boolean;
+    isCreatingError: GlobalError | null;
 }
 
 const initialState: ArtistsState = {
     items: [],
     itemsFetching: false,
+    isCreating: false,
+    isCreatingError: null,
 };
 
 export const artistsSlice = createSlice({
@@ -28,11 +32,25 @@ export const artistsSlice = createSlice({
             .addCase(fetchArtists.rejected, (state) => {
                 state.itemsFetching = false;
             });
+        builder
+            .addCase(createArtist.pending, (state) => {
+                state.isCreating = true;
+                state.isCreatingError = null;
+            })
+            .addCase(createArtist.fulfilled, (state) => {
+                state.isCreating = false;
+            })
+            .addCase(createArtist.rejected, (state, { payload: error }) => {
+                state.isCreating = false;
+                state.isCreatingError = error || null;
+            });
     },
     selectors:{
         selectArtists:(state)=>state.items,
         selectArtistsFetching:(state) =>state.itemsFetching,
-    }
+        selectArtistCreate:(state) => state.isCreating,
+        selectArtistCreateError:(state) => state.isCreatingError,
+    },
 });
 
 export const artistsReducer = artistsSlice.reducer;
@@ -40,5 +58,6 @@ export const artistsReducer = artistsSlice.reducer;
 export const {
     selectArtists,
     selectArtistsFetching,
+    selectArtistCreate,
 } = artistsSlice.selectors;
 
