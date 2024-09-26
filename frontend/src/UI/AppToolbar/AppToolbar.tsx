@@ -20,8 +20,8 @@ const AppToolbar = () => {
       <AppBar position="sticky" sx={{ mb: 2 }}>
         <Toolbar>
           <Container maxWidth="xl">
-            <Grid container alignItems="center" justifyContent="space-between">
 
+            <Grid container alignItems="center" justifyContent="space-between">
               <Grid item>
                 <Typography variant="h6" component="div">
                   <StyledLink to="/">Music</StyledLink>
@@ -29,21 +29,22 @@ const AppToolbar = () => {
               </Grid>
 
               <Grid item>
-                <Grid container alignItems="center" spacing={2}>
-                  {user ? <UserMenu user={user} /> : <AnonymousMenu />}
+                <Grid container alignItems="center" spacing={2} direction="row">
                   <Grid item>
                     <Button component={NavLink} to={user ? "/track_history" : "/login"} color="inherit">
                       Track History
                     </Button>
                   </Grid>
+                  <Grid item>
+                    {user ? <UserMenu user={user} /> : <AnonymousMenu />}
+                  </Grid>
                 </Grid>
               </Grid>
-
             </Grid>
+
           </Container>
         </Toolbar>
       </AppBar>
-
   );
 };
 

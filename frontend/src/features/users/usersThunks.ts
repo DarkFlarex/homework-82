@@ -3,6 +3,7 @@ import {GlobalError, LoginMutation, RegisterMutation, User, ValidationError} fro
 import axiosApi from "../../axiosApi";
 import {isAxiosError} from "axios";
 import {RootState} from "../../app/store";
+import {unsetUser} from "./usersSlice";
 
 export const register = createAsyncThunk<User, RegisterMutation, { rejectValue: ValidationError }>(
     'users/register',
@@ -33,4 +34,12 @@ export const login = createAsyncThunk<User, LoginMutation, { rejectValue: Global
             throw e;
         }
     }
+);
+
+export const logout = createAsyncThunk(
+    'users/logout',
+    async (_arg, {dispatch }) => {
+        await axiosApi.delete('/users/sessions');
+        dispatch(unsetUser());
+    },
 );
