@@ -32,7 +32,13 @@ const UserSchema
     token:{
         type: String,
         required: true,
-    }
+    },
+    role:{
+        type: String,
+        required: true,
+        default: 'user',
+        enum: ['user', 'admin'],
+    },
 });
 
 UserSchema.methods.checkPassword = function(password) {
