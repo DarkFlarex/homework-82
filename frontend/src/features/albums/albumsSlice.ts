@@ -26,7 +26,7 @@ export const albumsSlice = createSlice({
             .addCase(fetchAlbumsOneArtist.fulfilled,(state,{payload:albums})=>{
                 state.itemsFetching = false;
                 state.items = albums;
-                state.artistName = albums[0].artist.name;
+                state.artistName = albums.length > 0 ? albums[0].artist.name : null;
             })
             .addCase(fetchAlbumsOneArtist.rejected, (state) => {
                 state.itemsFetching = false;
