@@ -17,29 +17,50 @@ const run = async () => {
   } catch (e) {
     console.log('Skipping drop...');
   }
+  const user1 = new User({
+    username: 'admin',
+    password: '123',
+    role: 'admin',
+  });
+  user1.generateToken();
 
-  const user = new User({
+  const user2 = new User({
     username: 'user',
     password: '123',
+    role: 'user',
   });
-  user.generateToken();
+  user2.generateToken();
 
-  await user.save();
+  await user1.save();
+
+  await user2.save();
 
 
   const [
       kurtCobain,
-      ladyGaga
+      ladyGaga,
+      theWeeknd,
   ] = await Artist.create([
     {
+      createUser: user1,
       name: 'Курт Кобейн',
       image: 'fixtures/kurt.jpg',
-      information: 'Курт До́нальд Кобе́йн — американский рок-музыкант, вокалист, гитарист и автор песен. Наиболее известен как основатель и лидер рок-группы «Нирвана». В середине 1980-х годов Кобейн начал увлекаться панк-роком, а в 1987 году вместе с Кристом Новоселичем образовал группу «Нирвана».'
+      information: 'Курт До́нальд Кобе́йн — американский рок-музыкант, вокалист, гитарист и автор песен. Наиболее известен как основатель и лидер рок-группы «Нирвана». В середине 1980-х годов Кобейн начал увлекаться панк-роком, а в 1987 году вместе с Кристом Новоселичем образовал группу «Нирвана».',
+      isPublished: true,
     },
     {
+      createUser: user2,
       name: 'Леди Гага',
       image: 'fixtures/gaga.jpg',
-      information: 'Ле́ди Га́га — американская певица, автор песен, продюсер, филантроп и актриса. Имеет множество наград, среди которых шесть премий «Грэмми», 13 MTV Video Music Awards и 8 MTV Europe Music Awards, а также занимает четвёртое место в списке 100 величайших женщин в музыке по версии VH1.'
+      information: 'Ле́ди Га́га — американская певица, автор песен, продюсер, филантроп и актриса. Имеет множество наград, среди которых шесть премий «Грэмми», 13 MTV Video Music Awards и 8 MTV Europe Music Awards, а также занимает четвёртое место в списке 100 величайших женщин в музыке по версии VH1.',
+      isPublished: true,
+    },
+    {
+      createUser: user2,
+      name: 'The Weeknd',
+      image: 'fixtures/The_Weeknd.png',
+      information: 'Э́йбел Макко́нен Те́сфайе, также известный как The Weeknd — канадский певец, автор песен и актер. Известный своей звуковой универсальностью и мрачным лиризмом, его музыка исследует эскапизм, романтику и меланхолию и часто вдохновляется личным опытом.',
+      isPublished: false,
     }
   ]);
 
@@ -48,32 +69,47 @@ const run = async () => {
     nirvanaNevermind,
     InUtero,
     judas,
-    TheFameMonster
+    TheFameMonster,
+    Starboy,
   ] = await Album.create([
     {
+      createUser: user2,
       artist: kurtCobain,
       nameAlbum: 'Nirvana Nevermind',
       datetime: 1991,
-      image: 'fixtures/NirvanaNevermindAlbum.jpg'
+      image: 'fixtures/NirvanaNevermindAlbum.jpg',
+      isPublished: true,
     },
     {
+      createUser: user1,
       artist: kurtCobain,
       nameAlbum: 'In Utero',
       datetime: 1993,
-      image: 'fixtures/inUtero.jpg'
+      image: 'fixtures/inUtero.jpg',
+      isPublished: true,
     },
     {
+      createUser: user1,
       artist: ladyGaga,
       nameAlbum: 'Judas',
       datetime: 2011,
-      image: 'fixtures/judasAlbum.png'
+      image: 'fixtures/judasAlbum.png',
+      isPublished: true,
     },
-    {
+    { createUser: user2,
       artist: ladyGaga,
       nameAlbum: 'The Fame Monster',
       datetime: 2009,
-      image: 'fixtures/monster.jpg'
-    }
+      image: 'fixtures/monster.jpg',
+      isPublished: true,
+    }, {
+      createUser: user2,
+      artist: theWeeknd,
+      nameAlbum: 'Star boy',
+      datetime: 2016,
+      image: 'fixtures/starboy.jpg',
+      isPublished: false,
+    },
   ]);
 
   await Track.create([
@@ -82,142 +118,207 @@ const run = async () => {
       artist: kurtCobain,
       nameTrack: 'Smells Like Teen Spirit',
       duration: '4:38',
-      numberTrack: 1
+      numberTrack: 1,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: nirvanaNevermind,
       artist: kurtCobain,
       nameTrack: 'Come As You Are',
       duration: '3:44',
-      numberTrack: 2
+      numberTrack: 2,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: nirvanaNevermind,
       artist: kurtCobain,
-      nameTrack: 'Come As You Are3',
-      duration: '3:44',
-      numberTrack: 3
+      nameTrack: 'Lithium',
+      duration: '4:17',
+      numberTrack: 3,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: nirvanaNevermind,
       artist: kurtCobain,
-      nameTrack: 'Come As You Are4',
-      duration: '3:44',
-      numberTrack: 4
+      nameTrack: 'Territorial pissings',
+      duration: '2:23',
+      numberTrack: 4,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: nirvanaNevermind,
       artist: kurtCobain,
-      nameTrack: 'Come As You Are5',
-      duration: '3:44',
-      numberTrack: 5
+      nameTrack: 'Lounge act',
+      duration: '2:27',
+      numberTrack: 5,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: InUtero,
       artist: kurtCobain,
-      nameTrack: 'Scentless Apprentice1',
+      nameTrack: 'Scentless Apprentice',
       duration: '3:44',
-      numberTrack: 1
+      numberTrack: 1,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: InUtero,
       artist: kurtCobain,
-      nameTrack: 'Scentless Apprentice2',
-      duration: '3:44',
-      numberTrack: 2
+      nameTrack: 'Rape me',
+      duration: '2:50',
+      numberTrack: 2,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: InUtero,
       artist: kurtCobain,
-      nameTrack: 'Scentless Apprentice3',
-      duration: '3:44',
-      numberTrack: 3
+      nameTrack: 'Very Ape',
+      duration: '1:56',
+      numberTrack: 3,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: InUtero,
       artist: kurtCobain,
-      nameTrack: 'Scentless Apprentice4',
-      duration: '3:44',
-      numberTrack: 4
+      nameTrack: 'Radio friendly unit shifter',
+      duration: '4:51',
+      numberTrack: 4,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: InUtero,
       artist: kurtCobain,
-      nameTrack: 'Scentless Apprentice5',
-      duration: '3:44',
-      numberTrack: 5
+      nameTrack: 'scentless apprentice',
+      duration: '3:48',
+      numberTrack: 5,
+      isPublished: true,
+      createUser: user1,
     },
     {
       album: judas,
       artist: ladyGaga,
-      nameTrack: 'Judas1 имя трека',
+      nameTrack: 'Somewhere over the rainbow',
       duration: '5:34',
-      numberTrack: 1
+      numberTrack: 1,
+      isPublished: true,
+      createUser: user2,
     },
     {
       album: judas,
       artist: ladyGaga,
-      nameTrack: 'Judas2 имя трека',
-      duration: '5:34',
-      numberTrack: 2
+      nameTrack: 'La vie en rose',
+      duration: '2:34',
+      numberTrack: 2,
+      isPublished: true,
+      createUser: user2,
     },
     {
       album: judas,
       artist: ladyGaga,
-      nameTrack: 'Judas3 имя трека',
-      duration: '5:34',
-      numberTrack: 3
+      nameTrack: 'Maybe it’s time',
+      duration: '3:34',
+      numberTrack: 3,
+      isPublished: true,
+      createUser: user2,
     },
     {
       album: judas,
       artist: ladyGaga,
-      nameTrack: 'Judas4 имя трека',
-      duration: '5:34',
-      numberTrack: 4
+      nameTrack: 'Judas',
+      duration: '4:34',
+      numberTrack: 4,
+      isPublished: true,
+      createUser: user2,
     },
     {
       album: judas,
       artist: ladyGaga,
-      nameTrack: 'Judas5 имя трека',
+      nameTrack: 'Out of Time',
       duration: '5:34',
-      numberTrack: 5
+      numberTrack: 5,
+      isPublished: true,
+      createUser: user2,
     },
     {
       album: TheFameMonster,
       artist: ladyGaga,
       nameTrack: 'Monster',
       duration: '5:34',
-      numberTrack: 1
+      numberTrack: 1,
+      isPublished: true,
+      createUser: user2,
     },
     {
       album: TheFameMonster,
       artist: ladyGaga,
-      nameTrack: 'Monster2',
-      duration: '5:34',
-      numberTrack: 2
+      nameTrack: 'Just Dance',
+      duration: '4:02',
+      numberTrack: 2,
+      isPublished: true,
+      createUser: user2,
     },
     {
       album: TheFameMonster,
       artist: ladyGaga,
-      nameTrack: 'Monster3',
-      duration: '5:34',
-      numberTrack: 3
+      nameTrack: 'Paparazzi',
+      duration: '3:34',
+      numberTrack: 3,
+      isPublished: true,
+      createUser: user2,
     },
     {
       album: TheFameMonster,
       artist: ladyGaga,
-      nameTrack: 'Monster4',
-      duration: '5:34',
-      numberTrack: 4
+      nameTrack: 'Eh, Eh',
+      duration: '2:56',
+      numberTrack: 4,
+      isPublished: true,
+      createUser: user2,
     },
     {
       album: TheFameMonster,
       artist: ladyGaga,
-      nameTrack: 'Monster5',
+      nameTrack: 'The Fame',
       duration: '5:34',
-      numberTrack: 5
+      numberTrack: 5,
+      isPublished: true,
+      createUser: user2,
+    },{
+      album: Starboy,
+      artist: theWeeknd,
+      nameTrack: 'Starboy',
+      duration: '3:50',
+      numberTrack: 1,
+      isPublished: false,
+      createUser: user2,
+    },{
+      album: Starboy,
+      artist: theWeeknd,
+      nameTrack: 'False Alarm',
+      duration: '3:40',
+      numberTrack: 2,
+      isPublished: false,
+      createUser: user2,
+    },{
+      album: Starboy,
+      artist: theWeeknd,
+      nameTrack: 'Rockin',
+      duration: '3:53',
+      numberTrack: 3,
+      isPublished: false,
+      createUser: user2,
     }
   ]);
+
 
   await db.close();
 };
