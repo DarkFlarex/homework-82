@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import {imagesUpload} from "../multer";
 import Album from "../models/Album";
-import auth from "../middleware/auth";
+import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
 const albumsRouter = express.Router();
 
@@ -35,6 +35,24 @@ albumsRouter.get('/:id', async (req, res,next) => {
     }
 });
 
+albumsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res, next) => {
+    try {
+        const album = await Album.findById(req.params.id);
+
+        if (!album) {
+            return res.status(404).send({ error: 'Album not found' });
+        }
+
+        album.isPublished = !album.isPublished;
+
+        await album.save();
+
+        return res.send(album);
+    } catch (error) {
+        next(error);
+    }
+});
+
 albumsRouter.delete('/:id', auth,permit('admin'),async (req, res, next) => {
     try {
         const albums = await Album.findById(req.params.id);
@@ -50,9 +68,14 @@ albumsRouter.delete('/:id', auth,permit('admin'),async (req, res, next) => {
     }
 });
 
-albumsRouter.post('/', auth, imagesUpload.single('image'), async (req, res,next) => {
+albumsRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestWithUser, res,next) => {
     try {
+        if (!req.user) {
+            return res.status(401).send({ error: 'User not found' });
+        }
+
         const albumMutation = await Album.create({
+            createUser: req.user._id,
             artist: req.body.artist,
             nameAlbum: req.body.nameAlbum,
             datetime: req.body.datetime,
@@ -69,5 +92,3 @@ albumsRouter.post('/', auth, imagesUpload.single('image'), async (req, res,next)
 });
 
 export default albumsRouter;
-
-

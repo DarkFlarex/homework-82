@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import Track from "../models/Track";
-import auth from "../middleware/auth";
+import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
 
 const tracksRouter = express.Router();
@@ -16,6 +16,24 @@ tracksRouter.get('/', async (req, res, next) => {
         const tracks = await Track.find(filter).populate('album', 'nameAlbum').sort({ numberTrack: 1 });
 
         return res.send(tracks);
+    } catch (error) {
+        next(error);
+    }
+});
+
+tracksRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res, next) => {
+    try {
+        const track = await Track.findById(req.params.id);
+
+        if (!track) {
+            return res.status(404).send({ error: 'Track not found' });
+        }
+
+        track.isPublished = !track.isPublished;
+
+        await track.save();
+
+        return res.send(track);
     } catch (error) {
         next(error);
     }
@@ -36,12 +54,18 @@ tracksRouter.delete('/:id', auth,permit('admin'),async (req, res, next) => {
     }
 });
 
-tracksRouter.post('/', auth,async (req, res ,next) =>{
+tracksRouter.post('/', auth,async (req: RequestWithUser,res ,next) =>{
     try{
+        if (!req.user) {
+            return res.status(401).send({ error: 'User not found' });
+        }
+
         const tracks = await Track.find({ album: req.body.album }).sort({ numberTrack: -1 });
+
         const numberTrack = tracks.length > 0 ? tracks[0].numberTrack + 1 : 1;
 
         const trackMutation = await Track.create({
+            createUser: req.user._id,
             album: req.body.album,
             artist: req.body.artist,
             nameTrack: req.body.nameTrack,
@@ -57,7 +81,5 @@ tracksRouter.post('/', auth,async (req, res ,next) =>{
         return next(error);
     }
 });
-
-
 
 export default tracksRouter
