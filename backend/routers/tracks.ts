@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import Track from "../models/Track";
 import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
+import Album from "../models/Album";
 
 const tracksRouter = express.Router();
 
@@ -54,10 +55,16 @@ tracksRouter.delete('/:id', auth,permit('admin'),async (req, res, next) => {
     }
 });
 
-tracksRouter.post('/', auth,async (req: RequestWithUser,res ,next) =>{
-    try{
+tracksRouter.post('/', auth, async (req: RequestWithUser, res, next) => {
+    try {
         if (!req.user) {
             return res.status(401).send({ error: 'User not found' });
+        }
+
+        const album = await Album.findById(req.body.album);
+
+        if (!album) {
+            return res.status(404).send({ error: 'Album not found' });
         }
 
         const tracks = await Track.find({ album: req.body.album }).sort({ numberTrack: -1 });
@@ -67,16 +74,16 @@ tracksRouter.post('/', auth,async (req: RequestWithUser,res ,next) =>{
         const trackMutation = await Track.create({
             createUser: req.user._id,
             album: req.body.album,
-            artist: req.body.artist,
+            artist: album.artist._id,
             nameTrack: req.body.nameTrack,
             duration: req.body.duration,
             numberTrack: numberTrack,
         });
 
         return res.send(trackMutation);
-    } catch (error){
-        if (error instanceof mongoose.Error.ValidationError){
-            return  res.status(400).send(error);
+    } catch (error) {
+        if (error instanceof mongoose.Error.ValidationError) {
+            return res.status(400).send(error);
         }
         return next(error);
     }
