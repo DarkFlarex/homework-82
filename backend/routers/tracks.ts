@@ -4,14 +4,18 @@ import Track from "../models/Track";
 import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
 import Album from "../models/Album";
+import isPublished from "../middleware/isPublished";
 
 const tracksRouter = express.Router();
 
-tracksRouter.get('/', async (req, res, next) => {
+tracksRouter.get('/', isPublished,async (req: RequestWithUser, res, next) => {
     try {
         const filter: Record<string, unknown> = {};
         if (req.query.album) {
             filter.album = req.query.album;
+        }
+        if (!req.user || req.user.role !== 'admin') {
+            filter.isPublished = true;
         }
 
         const tracks = await Track.find(filter).populate('album', 'nameAlbum').sort({ numberTrack: 1 });

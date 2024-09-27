@@ -4,13 +4,18 @@ import {imagesUpload} from "../multer";
 import Album from "../models/Album";
 import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
+import isPublished from "../middleware/isPublished";
 const albumsRouter = express.Router();
 
-albumsRouter.get('/', async (req, res, next) => {
+albumsRouter.get('/',isPublished, async (req: RequestWithUser, res, next) => {
     try {
         const filter: Record<string, unknown> = {};
         if (req.query.artist) {
             filter.artist = req.query.artist;
+        }
+
+        if (!req.user || req.user.role !== 'admin') {
+            filter.isPublished = true;
         }
 
         const albums = await Album.find(filter).populate('artist', 'name').sort({ datetime: -1 });

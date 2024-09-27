@@ -4,17 +4,26 @@ import mongoose from "mongoose";
 import {imagesUpload} from "../multer";
 import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
+import isPublished from "../middleware/isPublished";
 
 const artistsRouter = express.Router();
 
-artistsRouter.get('/', async (req, res,next) => {
+artistsRouter.get('/', isPublished, async (req: RequestWithUser, res, next) => {
     try {
-        const artists = await Artist.find();
+        const filter: Record<string, unknown> = {};
+
+        if (!req.user || req.user.role !== 'admin') {
+            filter.isPublished = true;
+        }
+
+        const artists = await Artist.find(filter);
+
         return res.send(artists);
-    } catch (error){
+    } catch (error) {
         next(error);
     }
 });
+
 
 artistsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res, next) => {
     try {
