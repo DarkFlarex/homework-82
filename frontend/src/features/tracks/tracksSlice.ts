@@ -1,17 +1,21 @@
-import { Track} from "../../types";
+import {GlobalError, Track} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
-import {fetchTracksOneAlbum} from "./tracksThunks";
+import {createTrack, fetchTracksOneAlbum} from "./tracksThunks";
 
 export interface ArtistsState {
     items: Track[];
     itemsFetching: boolean;
     albumName: string | null;
+    isCreating: boolean;
+    isCreatingError: GlobalError | null;
 }
 
 const initialState: ArtistsState = {
     items: [],
     itemsFetching: false,
     albumName: null,
+    isCreating: false,
+    isCreatingError: null,
 };
 
 export const tracksSlice = createSlice({
@@ -31,11 +35,25 @@ export const tracksSlice = createSlice({
             .addCase(fetchTracksOneAlbum.rejected, (state) => {
                 state.itemsFetching = false;
             });
+        builder
+            .addCase(createTrack.pending, (state) => {
+                state.isCreating = true;
+                state.isCreatingError = null;
+            })
+            .addCase(createTrack.fulfilled, (state) => {
+                state.isCreating = false;
+            })
+            .addCase(createTrack.rejected, (state, { payload: error }) => {
+                state.isCreating = false;
+                state.isCreatingError = error || null;
+            });
     },
     selectors:{
         selectTracks:(state) => state.items,
         selectTracksFetching:(state) => state.itemsFetching,
         selectAlbumName:(state) => state.albumName,
+        selectTrackCreating:(state) => state.isCreating,
+        selectTrackCreateError:(state) => state.isCreatingError,
     }
 });
 
@@ -45,4 +63,5 @@ export const {
     selectTracks,
     selectTracksFetching,
     selectAlbumName,
+    selectTrackCreating,
 } = tracksSlice.selectors;
