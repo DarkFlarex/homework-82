@@ -3,6 +3,7 @@ export interface Artist {
     name: string;
     image:string | null;
     information: string;
+    isPublished: boolean;
 }
 
 export interface ArtistMutation {

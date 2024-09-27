@@ -1,8 +1,10 @@
 import React from 'react';
 import imageNotFound from '/src/assets/images/image-not-found.png';
 import {API_URL} from "../../../constants";
-import {Card, CardHeader, CardMedia, Grid, styled} from "@mui/material";
+import {Card, CardContent, CardHeader, CardMedia, Grid, styled, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
+import {useAppSelector} from "../../../app/hooks";
+import {selectUser} from "../../users/usersSlice";
 
 const ImageCardMedia = styled(CardMedia)({
     height: 0,
@@ -18,9 +20,11 @@ interface Props {
     _id:string;
     name: string;
     image: string |null;
+    isPublished: boolean;
 }
 
-const ArtistsItem:React.FC<Props> = ({_id, name,image}) => {
+const ArtistsItem:React.FC<Props> = ({_id, name,image,isPublished}) => {
+    const user = useAppSelector(selectUser);
     let cardImage = imageNotFound;
 
     if (image) {
@@ -32,6 +36,16 @@ const ArtistsItem:React.FC<Props> = ({_id, name,image}) => {
                 <Card sx={{ height: '100%' }}>
                     <CardHeader title={name} />
                     <ImageCardMedia image={cardImage} title={name} />
+                    {user && user.role ==='admin' &&(
+                        <CardContent>
+                            <Typography
+                                variant="caption"
+                                sx={{color: isPublished ? 'green' : 'red' }}
+                            >
+                                {isPublished ? "опубликовано" : "неопубликовано"}
+                            </Typography>
+                        </CardContent>
+                    )}
                 </Card>
             </StyledLink>
         </Grid>
