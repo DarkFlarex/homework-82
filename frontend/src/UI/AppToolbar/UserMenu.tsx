@@ -34,6 +34,11 @@ const UserMenu:React.FC<Props> = ({user}) => {
               </Button>
           </Grid>
           <Grid item>
+              <Button component={NavLink} to="/tracks/new" color="inherit">
+                  Add new Tracks
+              </Button>
+          </Grid>
+          <Grid item>
               <Button onClick={handleLogout} color="inherit">
                   Logout
               </Button>
