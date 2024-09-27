@@ -1,6 +1,6 @@
 import {Album, GlobalError} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
-import {createAlbum, fetchAlbumsOneArtist} from "./albumsThunks";
+import {createAlbum, fetchAlbums, fetchAlbumsOneArtist} from "./albumsThunks";
 
 export interface AlbumsState {
     items: Album[];
@@ -36,6 +36,17 @@ export const albumsSlice = createSlice({
                 state.itemsFetching = false;
             });
         builder
+            .addCase(fetchAlbums.pending,(state) =>{
+                state.itemsFetching = true;
+            })
+            .addCase(fetchAlbums.fulfilled,(state,{payload: albums}) =>{
+                state.itemsFetching = false;
+                state.items = albums;
+            })
+            .addCase(fetchAlbums.rejected, (state) => {
+                state.itemsFetching = false;
+            });
+        builder
             .addCase(createAlbum.pending, (state) => {
                 state.isCreating = true;
                 state.isCreatingError = null;
@@ -49,19 +60,21 @@ export const albumsSlice = createSlice({
             });
     },
     selectors:{
-        selectAlbums:(state) => state.items,
-        selectAlbumsFetching:(state) =>state.itemsFetching,
+        selectAlbumsOneArtist:(state) => state.items,
+        selectAlbumsOneArtistFetching:(state) =>state.itemsFetching,
         selectArtistName:(state) => state.artistName,
         selectAlbumCreating:(state) => state.isCreating,
         selectAlbumCreateError:(state) => state.isCreatingError,
+        selectAlbums:(state) => state.items,
+        selectAlbumsFetching:(state) =>state.itemsFetching,
     }
 });
 
 export const albumsReducer = albumsSlice.reducer;
 
 export const {
-    selectAlbums,
-    selectAlbumsFetching,
     selectArtistName,
     selectAlbumCreating,
+    selectAlbums,
+    selectAlbumsFetching,
 } = albumsSlice.selectors;

@@ -68,7 +68,7 @@ const AlbumForm: React.FC<Props> = ({onSubmit,isLoading}) => {
                         onChange={inputChangeHandler}
                     >
                         <MenuItem value="" disabled>
-                            Select category
+                            Select artist
                         </MenuItem>
                         {artists.map((artist) => (
                             <MenuItem key={artist._id} value={artist._id}>

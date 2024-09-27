@@ -5,12 +5,18 @@ import {RootState} from "../../app/store";
 import {isAxiosError} from "axios";
 
 export const fetchAlbumsOneArtist = createAsyncThunk<Album[], string>(
-    'albums/fetchAll',
+    'albums/fetchAlbumsOne',
     async (id) => {
         const {data: albums} = await axiosApi.get<Album[]>(`/albums?artist=${id}`);
         return albums;
     }
 );
+
+export const fetchAlbums = createAsyncThunk (
+    'albums/fetchAll', async ()=>{
+        const {data: albums} = await axiosApi.get<Album[]>('/albums');
+        return albums;
+});
 
 export const createAlbum = createAsyncThunk<void, AlbumMutation, { rejectValue: GlobalError; state: RootState }>(
     'albums/create',
