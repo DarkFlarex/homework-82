@@ -12,6 +12,36 @@ export const fetchTracksOneAlbum = createAsyncThunk<Track[], string>(
     }
 );
 
+export const fetchTogglePublishedTrack = createAsyncThunk<Track, string, { rejectValue: GlobalError; state: RootState }>(
+    'tracks/fetchTogglePublished',
+    async (id, { rejectWithValue }) => {
+        try {
+            const { data: track } = await axiosApi.patch<Track>(`/tracks/${id}/togglePublished`);
+            return track;
+        } catch (e) {
+            if (isAxiosError(e) && e.response) {
+                return rejectWithValue(e.response.data);
+            }
+            throw e;
+        }
+    }
+);
+
+export const deleteTrack = createAsyncThunk<Track, string, { rejectValue: GlobalError; state: RootState }>(
+    'tracks/fetchDelete',
+    async (id, { rejectWithValue }) => {
+        try {
+            const { data: track } = await axiosApi.delete<Track>(`/tracks/${id}`);
+            return track;
+        } catch (e) {
+            if (isAxiosError(e) && e.response) {
+                return rejectWithValue(e.response.data);
+            }
+            throw e;
+        }
+    }
+);
+
 export const createTrack = createAsyncThunk<Track, TrackMutation, { rejectValue: GlobalError; state: RootState }>(
     'tracks/create',
     async (trackMutation, { getState, rejectWithValue }) => {
