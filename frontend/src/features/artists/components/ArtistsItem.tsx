@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import imageNotFound from '/src/assets/images/image-not-found.png';
 import {API_URL} from "../../../constants";
-import {Card, CardContent, CardHeader, CardMedia, Grid, styled, Typography} from "@mui/material";
+import {Button, Card, CardHeader, CardMedia, Grid, IconButton, styled} from "@mui/material";
 import {Link} from "react-router-dom";
-import {useAppSelector} from "../../../app/hooks";
+import {useAppDispatch, useAppSelector} from "../../../app/hooks";
 import {selectUser} from "../../users/usersSlice";
+import {deleteArtist, fetchArtists, fetchTogglePublishedArtist} from "../artistsThunks";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const ImageCardMedia = styled(CardMedia)({
     height: 0,
@@ -24,30 +26,59 @@ interface Props {
 }
 
 const ArtistsItem:React.FC<Props> = ({_id, name,image,isPublished}) => {
+    const dispatch = useAppDispatch();
     const user = useAppSelector(selectUser);
     let cardImage = imageNotFound;
 
     if (image) {
         cardImage = `${API_URL}/${image}`;
     }
+
+    const handlePublishToggleArtist = useCallback(async () => {
+        try {
+            await dispatch(fetchTogglePublishedArtist(_id)).unwrap();
+            await dispatch(fetchArtists()).unwrap();
+        } catch (error) {
+            console.error('Toggling publish status Artist error:', error);
+        }
+    }, [dispatch, _id ]);
+
+    const handleDelete = async () => {
+        if (window.confirm(`Are you sure you want to delete this "${name}"?`)) {
+            try {
+                await dispatch(deleteArtist(_id)).unwrap();
+                await dispatch(fetchArtists()).unwrap();
+            } catch (error) {
+                console.error('Delete artist error: ', error);
+            }
+        }
+    };
     return (
-        <Grid item sx={{ width: '300px' }}>
+        <Grid item sx={{ width: '330px' }}>
+            <Card sx={{ height: '100%' }}>
             <StyledLink to={`/albums/${_id}`}>
-                <Card sx={{ height: '100%' }}>
-                    <CardHeader title={name} />
-                    <ImageCardMedia image={cardImage} title={name} />
-                    {user && user.role ==='admin' &&(
-                        <CardContent>
-                            <Typography
-                                variant="caption"
-                                sx={{color: isPublished ? 'green' : 'red' }}
-                            >
-                                {isPublished ? "опубликовано" : "неопубликовано"}
-                            </Typography>
-                        </CardContent>
-                    )}
-                </Card>
+                <CardHeader title={name} />
+                <ImageCardMedia image={cardImage} title={name} />
             </StyledLink>
+            {user && user.role === 'admin' && (
+            <Grid container spacing={1} alignItems="center" justifyContent="space-between" sx={{ padding: 2 }}>
+                <Grid item>
+                    <Button
+                        sx={{ color: isPublished ? 'green' : 'red' }}
+                        onClick={handlePublishToggleArtist}
+                    >
+                        {isPublished ? "опубликовано" : "неопубликовано"}
+                    </Button>
+                </Grid>
+
+                <Grid item>
+                    <IconButton aria-label="delete" onClick={handleDelete}>
+                        <h6 style={{ margin: 0 }}>Delete Artist</h6> <DeleteIcon fontSize="inherit" />
+                    </IconButton>
+                </Grid>
+            </Grid>
+                )}
+            </Card>
         </Grid>
     );
 };

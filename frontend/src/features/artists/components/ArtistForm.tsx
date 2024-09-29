@@ -31,7 +31,7 @@ const ArtistForm: React.FC<Props> = ({ isLoading }) => {
         }
     };
 
-    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setState((prevState) => ({
             ...prevState,

@@ -24,7 +24,6 @@ artistsRouter.get('/', isPublished, async (req: RequestWithUser, res, next) => {
     }
 });
 
-
 artistsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res, next) => {
     try {
         const artist = await Artist.findById(req.params.id);

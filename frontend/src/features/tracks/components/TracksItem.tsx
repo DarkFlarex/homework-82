@@ -24,7 +24,7 @@ const TracksItem: React.FC<Props> = ({nameTrack,duration,numberTrack,trackId,isP
         dispatch(addTrackToHistory({ track: trackId }));
     };
 
-    const handlePublishToggle = useCallback(async () => {
+    const handlePublishToggleTrack = useCallback(async () => {
         try {
             await dispatch(fetchTogglePublishedTrack(trackId)).unwrap();
             await dispatch(fetchTracksOneAlbum(id)).unwrap();
@@ -34,7 +34,7 @@ const TracksItem: React.FC<Props> = ({nameTrack,duration,numberTrack,trackId,isP
     }, [dispatch, trackId, id ]);
 
     const handleDelete = async () => {
-        if (window.confirm('Are you sure you want to delete this Item?')) {
+        if (window.confirm(`Are you sure you want to delete this "${nameTrack}"?`)) {
             try {
                 await dispatch(deleteTrack(trackId)).unwrap();
                 await dispatch(fetchTracksOneAlbum(id)).unwrap();
@@ -58,7 +58,7 @@ const TracksItem: React.FC<Props> = ({nameTrack,duration,numberTrack,trackId,isP
                     {user && user.role === 'admin' && (
                         <Button
                             sx={{ color: isPublished ? 'green' : 'red' }}
-                            onClick={handlePublishToggle}
+                            onClick={handlePublishToggleTrack}
                         >
                             {isPublished ? "опубликовано" : "неопубликовано"}
                         </Button>

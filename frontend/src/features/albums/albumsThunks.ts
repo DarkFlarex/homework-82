@@ -18,6 +18,36 @@ export const fetchAlbums = createAsyncThunk (
         return albums;
 });
 
+export const fetchTogglePublishedAlbums = createAsyncThunk<Album, string, { rejectValue: GlobalError; state: RootState }>(
+    'albums/fetchTogglePublished',
+    async (id, { rejectWithValue }) => {
+        try {
+            const { data: album } = await axiosApi.patch<Album>(`/albums/${id}/togglePublished`);
+            return album;
+        } catch (e) {
+            if (isAxiosError(e) && e.response) {
+                return rejectWithValue(e.response.data);
+            }
+            throw e;
+        }
+    }
+);
+
+export const deleteAlbum = createAsyncThunk<Album, string, { rejectValue: GlobalError; state: RootState }>(
+    'albums/fetchDelete',
+    async (id, { rejectWithValue }) => {
+        try {
+            const { data: album } = await axiosApi.delete<Album>(`/albums/${id}`);
+            return album;
+        } catch (e) {
+            if (isAxiosError(e) && e.response) {
+                return rejectWithValue(e.response.data);
+            }
+            throw e;
+        }
+    }
+);
+
 export const createAlbum = createAsyncThunk<void, AlbumMutation, { rejectValue: GlobalError; state: RootState }>(
     'albums/create',
     async (albumMutation, { getState, rejectWithValue }) => {

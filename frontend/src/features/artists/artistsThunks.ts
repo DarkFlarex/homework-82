@@ -10,6 +10,36 @@ export const fetchArtists = createAsyncThunk (
     return artists;
 });
 
+export const fetchTogglePublishedArtist = createAsyncThunk<Artist, string, { rejectValue: GlobalError; state: RootState }>(
+    'artists/fetchTogglePublished',
+    async (id, { rejectWithValue }) => {
+        try {
+            const { data: artist } = await axiosApi.patch<Artist>(`/artists/${id}/togglePublished`);
+            return artist;
+        } catch (e) {
+            if (isAxiosError(e) && e.response) {
+                return rejectWithValue(e.response.data);
+            }
+            throw e;
+        }
+    }
+);
+
+export const deleteArtist = createAsyncThunk<Artist, string, { rejectValue: GlobalError; state: RootState }>(
+    'artists/fetchDelete',
+    async (id, { rejectWithValue }) => {
+        try {
+            const { data: artist } = await axiosApi.delete<Artist>(`/artists/${id}`);
+            return artist;
+        } catch (e) {
+            if (isAxiosError(e) && e.response) {
+                return rejectWithValue(e.response.data);
+            }
+            throw e;
+        }
+    }
+);
+
 export const createArtist = createAsyncThunk<void, ArtistMutation, { rejectValue: GlobalError; state: RootState }>(
     'artists/create',
     async (artistMutation, { getState, rejectWithValue }) => {

@@ -1,6 +1,6 @@
 import {Album, GlobalError} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
-import {createAlbum, fetchAlbums, fetchAlbumsOneArtist} from "./albumsThunks";
+import {createAlbum, deleteAlbum, fetchAlbums, fetchAlbumsOneArtist} from "./albumsThunks";
 
 export interface AlbumsState {
     items: Album[];
@@ -8,6 +8,7 @@ export interface AlbumsState {
     artistName: string | null;
     isCreating: boolean;
     isCreatingError: GlobalError | null;
+    deleteLoading: string | false;
 }
 
 const initialState: AlbumsState = {
@@ -16,6 +17,7 @@ const initialState: AlbumsState = {
     itemsFetching: false,
     isCreating: false,
     isCreatingError: null,
+    deleteLoading:false,
 };
 
 export const albumsSlice = createSlice({
@@ -58,6 +60,16 @@ export const albumsSlice = createSlice({
                 state.isCreating = false;
                 state.isCreatingError = error || null;
             });
+        builder
+            .addCase(deleteAlbum.pending, (state, { meta: { arg: trackId } }) => {
+                state.deleteLoading = trackId;
+            })
+            .addCase(deleteAlbum.fulfilled, (state) => {
+                state.deleteLoading = false;
+            })
+            .addCase(deleteAlbum.rejected, (state) => {
+                state.deleteLoading = false;
+            });
     },
     selectors:{
         selectAlbumsOneArtist:(state) => state.items,
@@ -67,6 +79,7 @@ export const albumsSlice = createSlice({
         selectAlbumCreateError:(state) => state.isCreatingError,
         selectAlbums:(state) => state.items,
         selectAlbumsFetching:(state) =>state.itemsFetching,
+        selectDeleteAlbumLoading: (state) => state.deleteLoading,
     }
 });
 

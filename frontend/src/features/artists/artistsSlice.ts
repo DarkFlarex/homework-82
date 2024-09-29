@@ -1,12 +1,13 @@
 import {Artist, GlobalError} from "../../types";
 import {createSlice} from "@reduxjs/toolkit";
-import {createArtist, fetchArtists} from "./artistsThunks";
+import {createArtist, deleteArtist, fetchArtists} from "./artistsThunks";
 
 export interface ArtistsState {
     items: Artist[];
     itemsFetching: boolean;
     isCreating: boolean;
     isCreatingError: GlobalError | null;
+    deleteLoading: string | false;
 }
 
 const initialState: ArtistsState = {
@@ -14,6 +15,7 @@ const initialState: ArtistsState = {
     itemsFetching: false,
     isCreating: false,
     isCreatingError: null,
+    deleteLoading:false,
 };
 
 export const artistsSlice = createSlice({
@@ -44,12 +46,23 @@ export const artistsSlice = createSlice({
                 state.isCreating = false;
                 state.isCreatingError = error || null;
             });
+        builder
+            .addCase(deleteArtist.pending, (state, { meta: { arg: trackId } }) => {
+                state.deleteLoading = trackId;
+            })
+            .addCase(deleteArtist.fulfilled, (state) => {
+                state.deleteLoading = false;
+            })
+            .addCase(deleteArtist.rejected, (state) => {
+                state.deleteLoading = false;
+            });
     },
     selectors:{
         selectArtists:(state)=>state.items,
         selectArtistsFetching:(state) =>state.itemsFetching,
         selectArtistCreate:(state) => state.isCreating,
         selectArtistCreateError:(state) => state.isCreatingError,
+        selectDeleteArtistLoading: (state) => state.deleteLoading,
     },
 });
 
