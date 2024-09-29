@@ -31,6 +31,7 @@ const Tracks = () => {
                 numberTrack={track.numberTrack}
                 duration={track.duration}
                 trackId={track._id}
+                isPublished={track.isPublished}
             />
         ));
     }

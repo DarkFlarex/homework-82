@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card, CardContent, CardHeader, Grid} from "@mui/material";
+import {Button, Card, CardContent, CardHeader, Grid, Typography} from "@mui/material";
 import {addTrackToHistory} from "../../TrackHistory/trackHistoryThunks";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks";
 import {selectUser} from "../../users/usersSlice";
@@ -9,9 +9,10 @@ export interface Props {
     duration:string;
     numberTrack:number;
     trackId: string;
+    isPublished: boolean;
 }
 
-const TracksItem: React.FC<Props> = ({nameTrack,duration,numberTrack,trackId }) => {
+const TracksItem: React.FC<Props> = ({nameTrack,duration,numberTrack,trackId,isPublished }) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectUser);
 
@@ -29,6 +30,16 @@ const TracksItem: React.FC<Props> = ({nameTrack,duration,numberTrack,trackId }) 
                 <CardContent>
                     <span>{duration}:duration</span>
                 </CardContent>
+                {user && user.role ==='admin' &&(
+                    <CardContent>
+                        <Typography
+                            variant="caption"
+                            sx={{color: isPublished ? 'green' : 'red' }}
+                        >
+                            {isPublished ? "опубликовано" : "неопубликовано"}
+                        </Typography>
+                    </CardContent>
+                )}
                 <Grid item>
                     {user && (
                         <Button onClick={handlePlayClick}>

@@ -30,6 +30,7 @@ const Albums = () => {
                 nameAlbum={album.nameAlbum}
                 image={album.image}
                 datetime={album.datetime}
+                isPublished={album.isPublished}
             />
         ));
     }

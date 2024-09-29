@@ -20,6 +20,7 @@ export interface Album {
     nameAlbum: string;
     datetime: number;
     image: string | null;
+    isPublished: boolean;
 }
 
 export interface AlbumMutation {
@@ -38,6 +39,7 @@ export interface Track {
     nameTrack: string;
     duration: string;
     numberTrack: number;
+    isPublished: boolean;
 }
 
 export interface TrackMutation {
