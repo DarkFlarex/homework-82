@@ -3,7 +3,8 @@ import {Button, Grid, Typography} from '@mui/material';
 import {User} from "../../types";
 import {logout} from "../../features/users/usersThunks";
 import {useAppDispatch} from "../../app/hooks";
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
+import {fetchArtists} from "../../features/artists/artistsThunks";
 
 interface  Props {
   user: User;
@@ -11,9 +12,12 @@ interface  Props {
 
 const UserMenu:React.FC<Props> = ({user}) => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
-    const handleLogout = () => {
-        dispatch(logout());
+    const handleLogout = async () => {
+        await dispatch(logout());
+        await dispatch(fetchArtists()).unwrap();
+        navigate('/');
     };
 
   return (
