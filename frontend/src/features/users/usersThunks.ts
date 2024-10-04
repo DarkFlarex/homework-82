@@ -8,17 +8,24 @@ import {unsetUser} from "./usersSlice";
 export const register = createAsyncThunk<User, RegisterMutation, { rejectValue: ValidationError }>(
     'users/register',
     async (registerMutation, { rejectWithValue }) => {
+        const formData = new FormData();
+        const keys = Object.keys(registerMutation) as (keyof RegisterMutation)[];
+        keys.forEach((key) => {
+            const value = registerMutation[key];
+            if (value !== null) {
+                formData.append(key, value);
+            }
+        });
         try {
-            const { data: user } = await axiosApi.post<User>('/users', registerMutation);
+            const { data: user } = await axiosApi.post<User>('/users', formData);
             return user;
         } catch (e) {
             if (isAxiosError(e) && e.response && e.response.status === 400) {
                 return rejectWithValue(e.response.data);
             }
-
             throw e;
         }
-    },
+    }
 );
 
 export const login = createAsyncThunk<User, LoginMutation, { rejectValue: GlobalError, state: RootState }>(
@@ -41,5 +48,20 @@ export const logout = createAsyncThunk(
     async (_arg, {dispatch }) => {
         await axiosApi.delete('/users/sessions');
         dispatch(unsetUser());
+    },
+);
+
+export const googleLogin = createAsyncThunk<User, string, { rejectValue: GlobalError }>(
+    'users/googleLogin',
+    async (credential, { rejectWithValue }) => {
+        try {
+            const { data: user } = await axiosApi.post<User>('/users/google', { credential });
+            return user;
+        } catch (e) {
+            if (isAxiosError<GlobalError>(e) && e.response && e.response.status === 400) {
+                return rejectWithValue(e.response.data);
+            }
+            throw e;
+        }
     },
 );
