@@ -3,9 +3,10 @@ import { Link as RouterLink, useNavigate} from "react-router-dom";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectLoginError} from "./usersSlice";
 import {LoginMutation} from "../../types";
-import {login} from "./usersThunks";
+import {googleLogin, login} from "./usersThunks";
 import {Alert, Avatar, Box, Button, Grid, Link, TextField, Typography} from "@mui/material";
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import {CredentialResponse, GoogleLogin} from "@react-oauth/google";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -29,6 +30,13 @@ const Login = () => {
         await dispatch(login(state)).unwrap();
         navigate('/');
     };
+
+    const googleLoginHandler = async (credentialResponse: CredentialResponse) => {
+        if (credentialResponse.credential) {
+            await dispatch(googleLogin(credentialResponse.credential)).unwrap();
+            navigate('/');
+        }
+    };
     return (
         <Box
             sx={{
@@ -49,6 +57,14 @@ const Login = () => {
                     {error.error}
                 </Alert>
             )}
+            <Box sx={{ pt: 2 }}>
+                <GoogleLogin
+                    onSuccess={googleLoginHandler}
+                    onError={() => {
+                        console.log('Login Failed');
+                    }}
+                />
+            </Box>
             <Box component="form" onSubmit={submitFormHandler} sx={{ mt: 3 }}>
                 <Grid container direction="column" spacing={2}>
                     <Grid item>
