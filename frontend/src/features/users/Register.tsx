@@ -6,6 +6,7 @@ import {register} from "./usersThunks";
 import {Avatar, Box, Button, Grid, Link, TextField, Typography} from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import {selectRegisterError} from "./usersSlice";
+import FileInput from "../../UI/FileInput/FileInput";
 
 const Register = () => {
     const dispatch = useAppDispatch();
@@ -15,6 +16,8 @@ const Register = () => {
     const [state, setState] = useState<RegisterMutation>({
         username: '',
         password: '',
+        displayName: '',
+        avatar: null,
     });
 
     const getFieldError = (fieldName: string) => {
@@ -37,6 +40,16 @@ const Register = () => {
         } catch (e) {
             console.error('Registration error:', e);
         }
+    };
+
+    const fileInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, files } = event.target;
+        const value = files && files[0] ? files[0] : null;
+        console.log('Selected file:', value);
+        setState((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
     };
 
     return (
@@ -79,6 +92,26 @@ const Register = () => {
                             onChange={inputChangeHandler}
                             error={Boolean(getFieldError('password'))}
                             helperText={getFieldError('password')}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <TextField
+                            required
+                            label="Display Name"
+                            id="displayName"
+                            name="displayName"
+                            value={state.displayName}
+                            onChange={inputChangeHandler}
+                            error={Boolean(getFieldError('displayName'))}
+                            helperText={getFieldError('displayName')}
+                        />
+                    </Grid>
+
+                    <Grid item>
+                        <FileInput
+                            label="Avatar"
+                            name="avatar"
+                            onChange={fileInputChangeHandler}
                         />
                     </Grid>
                 </Grid>
