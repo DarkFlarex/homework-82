@@ -39,7 +39,14 @@ const UserSchema
         default: 'user',
         enum: ['user', 'admin'],
     },
-});
+    displayName: {
+        type: String,
+        required: true,
+    },
+    googleID: String,
+    avatar: String,
+}
+);
 
 UserSchema.methods.checkPassword = function(password) {
     return bcrypt.compare(password, this.password);
