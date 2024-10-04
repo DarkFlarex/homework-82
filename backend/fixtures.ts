@@ -21,6 +21,8 @@ const run = async () => {
     username: 'admin',
     password: '123',
     role: 'admin',
+    displayName: 'Admin',
+    avatar: 'fixtures/admin.png',
   });
   user1.generateToken();
 
@@ -28,6 +30,8 @@ const run = async () => {
     username: 'user',
     password: '123',
     role: 'user',
+    displayName: 'User',
+    avatar: 'fixtures/user.png',
   });
   user2.generateToken();
 
